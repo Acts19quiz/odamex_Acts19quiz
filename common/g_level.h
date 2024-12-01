@@ -207,7 +207,8 @@ struct level_pwad_info_t
 	      snapshot(other.snapshot), defered(other.defered), fadetable("COLORMAP"),
 	      skypic2(""), gravity(0.0f), aircontrol(0.0f), exitpic(""), enterpic(""),
 	      endpic(""), intertext(""), intertextsecret(""), interbackdrop(""), intermusic(""),
-	      bossactions(), label(), clearlabel(false), author(), sky1ScrollDelta(0), sky2ScrollDelta(0)
+	      sky1ScrollDelta(0), sky2ScrollDelta(0), bossactions(), label(),
+	      clearlabel(false), author()
 	{
 		ArrayInit(fadeto_color, 0);
 		ArrayInit(outsidefog_color, 0);
@@ -413,12 +414,17 @@ public:
 	size_t size() const;
 };
 
+typedef OHashTable<int, int> ACSWorldGlobalArray;
+
 extern int ACS_WorldVars[NUM_WORLDVARS];
 extern int ACS_GlobalVars[NUM_GLOBALVARS];
+extern ACSWorldGlobalArray ACS_WorldArrays[NUM_WORLDVARS];
+extern ACSWorldGlobalArray ACS_GlobalArrays[NUM_GLOBALVARS];
 
 extern BOOL savegamerestore;
 
 void G_InitNew(const char *mapname);
+inline void G_InitNew(const OLumpName& mapname) { G_InitNew(mapname.c_str()); }
 void G_ChangeMap();
 void G_ChangeMap(size_t index);
 void G_RestartMap();

@@ -142,7 +142,7 @@ int P_FindLineFromTag(int tag, int start)
 	return start;
 }
 
-const unsigned int P_ResetSectorTransferFlags(const unsigned int flags)
+unsigned int P_ResetSectorTransferFlags(const unsigned int flags)
 {
 	return (flags & ~SECF_TRANSFERMASK);
 }
@@ -892,8 +892,6 @@ void P_InitPicAnims (void)
 						(anim_p[20] << 8) |
 						(anim_p[21] << 16) |
 						(anim_p[22] << 24);
-
-			lastanim->countdown--;
 
 			lastanim++;
 		}

@@ -81,9 +81,11 @@ extern int mapchange;
 
 // ACS variables with world scope
 int ACS_WorldVars[NUM_WORLDVARS];
+ACSWorldGlobalArray ACS_WorldArrays[NUM_WORLDVARS];
 
 // ACS variables with global scope
 int ACS_GlobalVars[NUM_GLOBALVARS];
+ACSWorldGlobalArray ACS_GlobalArrays[NUM_GLOBALVARS];
 
 // [AM] Stores the reset snapshot
 FLZOMemFile	*reset_snapshot = NULL;
@@ -102,13 +104,13 @@ bool isFast = false;
 // Can be called by the startup code or the menu task,
 // consoleplayer, displayplayer, should be set.
 //
-static char d_mapname[9];
+static OLumpName d_mapname;
 
 std::string G_NextMap();
 
 void G_DeferedInitNew (const char* mapname)
 {
-	std::string mapnamestr = mapname;
+	const std::string mapnamestr = mapname;
 
 	if (iequals(mapnamestr.substr(0, 7).c_str(), "EndGame"))
 	{
@@ -130,13 +132,13 @@ void G_DeferedInitNew (const char* mapname)
 	}
 	else
 	{
-		strncpy(d_mapname, mapname, 8);
+		d_mapname = mapname;
 	}
 
 	gameaction = ga_newgame;
 
 	// sv_nextmap cvar may be overridden by a script
-	sv_nextmap.ForceSet(d_mapname);
+	sv_nextmap.ForceSet(d_mapname.c_str());
 }
 
 void G_DeferedFullReset()
@@ -338,12 +340,12 @@ void G_DoNewGame()
 			continue;
 
 		MSG_WriteSVC(&it->client.reliablebuf,
-		             SVC_LoadMap(::wadfiles, ::patchfiles, d_mapname, 0));
+		             SVC_LoadMap(::wadfiles, ::patchfiles, d_mapname.c_str(), 0));
 	}
 
-	sv_curmap.ForceSet(d_mapname);
+	sv_curmap.ForceSet(d_mapname.c_str());
 
-	G_InitNew (d_mapname);
+	G_InitNew(d_mapname);
 	gameaction = ga_nothing;
 
 	// run script at the start of each map
@@ -375,7 +377,7 @@ EXTERN_CVAR (sv_maxplayers)
 void G_PlayerReborn (player_t &player);
 void SV_ServerSettingChange();
 
-void G_InitNew (const char *mapname)
+void G_InitNew(const char *mapname)
 {
 	size_t i;
 
@@ -466,6 +468,10 @@ void G_InitNew (const char *mapname)
 		M_ClearRandom ();
 		memset (ACS_WorldVars, 0, sizeof(ACS_WorldVars));
 		memset (ACS_GlobalVars, 0, sizeof(ACS_GlobalVars));
+		for (int i = 0; i < NUM_GLOBALVARS; i++)
+			ACS_GlobalArrays[i].clear();
+		for (int i = 0; i < NUM_WORLDVARS; i++)
+			ACS_WorldArrays[i].clear();
 		level.time = 0;
 		level.inttimeleft = 0;
 
@@ -561,20 +567,20 @@ void G_SecretExitLevel (int position, int drawscores, bool resetinv)
 
 	SV_ExitLevel();
 
-    if (drawscores)
-        SV_DrawScores();
+	if (drawscores)
+		SV_DrawScores();
 
 	gamestate = GS_INTERMISSION;
 	mapchange = TICRATE * sv_intermissionlimit;  // wait n seconds, defaults to 10
 
 	// IF NO WOLF3D LEVELS, NO SECRET EXIT!
 	if ( (gameinfo.flags & GI_MAPxx)
-		 && (W_CheckNumForName("map31")<0))
+		&& (W_CheckNumForName("map31")<0))
 		secretexit = false;
 	else
 		secretexit = true;
 
-    gameaction = ga_completed;
+	gameaction = ga_completed;
 
 	// denis - this will skip wi_stuff and allow some time for finale text
 	//G_WorldDone();
@@ -794,16 +800,16 @@ void G_DoLoadLevel (int position)
 	//	a flat. The data is in the WAD only because
 	//	we look for an actual index, instead of simply
 	//	setting one.
-	skyflatnum = R_FlatNumForName ( SKYFLATNAME );
+	skyflatnum = R_FlatNumForName(SKYFLATNAME);
 
 	// DOOM determines the sky texture to be used
 	// depending on the current episode, and the game version.
 	// [RH] Fetch sky parameters from level_locals_t.
 	// [ML] 5/11/06 - remove sky2 remenants
 	// [SL] 2012-03-19 - Add sky2 back
-	sky1texture = R_TextureNumForName (level.skypic.c_str());
+	sky1texture = R_TextureNumForName(level.skypic);
 	if (!level.skypic2.empty())
-		sky2texture = R_TextureNumForName (level.skypic2.c_str());
+		sky2texture = R_TextureNumForName(level.skypic2);
 	else
 		sky2texture = 0;
 
