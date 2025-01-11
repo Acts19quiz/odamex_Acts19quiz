@@ -405,11 +405,11 @@ void AM_findMinMaxBoundaries()
 	const fixed64_t max_w = max.x - min.x;
 	const fixed64_t max_h = max.y - min.y;
 
-	const fixed64_t a = FixedDiv64((I_GetSurfaceWidth()) << FRACBITS64, max_w);
-	const fixed64_t b = FixedDiv64((I_GetSurfaceHeight()) << FRACBITS64, max_h);
+	const fixed64_t a = FixedDiv64(static_cast<int64_t>(I_GetSurfaceWidth()) << FRACBITS64, max_w);
+	const fixed64_t b = FixedDiv64(static_cast<int64_t>(I_GetSurfaceHeight()) << FRACBITS64, max_h);
 
 	min_scale_mtof = a < b ? a : b;
-	max_scale_mtof = FixedDiv64((I_GetSurfaceHeight()) << FRACBITS64, 2 * PLAYERRADIUS64);
+	max_scale_mtof = FixedDiv64(static_cast<int64_t>(I_GetSurfaceHeight()) << FRACBITS64, 2 * PLAYERRADIUS64);
 }
 
 //
