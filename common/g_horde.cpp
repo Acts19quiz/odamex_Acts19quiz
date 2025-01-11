@@ -35,6 +35,8 @@
 
 extern std::vector<hordeDefine_t> WAVE_DEFINES;
 
+static hordeDefine_t EMPTY_WAVE_DEFINE;
+
 typedef OHashTable<std::string, mobjtype_t> AliasMap;
 AliasMap g_aliasMap;
 
@@ -472,7 +474,6 @@ static void ParseHordeDefs()
 		::WAVE_DEFINES[i].legacyID = i;
 	}
 
-	int i = -1;
 	for (std::vector<hordeDefine_t>::iterator it = ::WAVE_DEFINES.begin();
 	     it != ::WAVE_DEFINES.end(); ++it)
 	{
@@ -506,11 +507,20 @@ void G_ParseHordeDefs()
 }
 
 /**
- * @brief Resolve a horde define ID to an actual define.  Should be identical on client and server.
+ * @brief Resolve a horde define ID to an actual define.  Should be identical on client
+ * and server.
  *
  * @param id ID of define.
  */
 const hordeDefine_t& G_HordeDefine(size_t id)
 {
-	return ::WAVE_DEFINES.at(id);
+	if (id >= ::WAVE_DEFINES.size())
+	{
+		Printf(PRINT_WARNING,
+		       "Tried to access horde wave %lu but only have %lu horde defines!\n", id,
+		       ::WAVE_DEFINES.size());
+		return EMPTY_WAVE_DEFINE;
+	}
+
+	return ::WAVE_DEFINES[id];
 }

@@ -608,7 +608,7 @@ void ISDL20Window::getEvents()
 					if ((EWindowMode)vid_fullscreen.asInt() == WINDOW_Windowed && current_time > mAcceptResizeEventsTime)
 					{
 						char tmp[30];
-						sprintf(tmp, "vid_setmode %d %d", width, height);
+						snprintf(tmp, 30, "vid_setmode %d %d", width, height);
 						AddCommandString(tmp);
 					}
 				}
@@ -991,7 +991,7 @@ ISDL20VideoSubsystem::ISDL20VideoSubsystem() : IVideoSubsystem()
 
 	mVideoCapabilities = new ISDL20VideoCapabilities();
 
-	mWindow = new ISDL20Window(640, 480, 8, WINDOW_Windowed, false);
+	mWindow = new ISDL20Window(320, 200, 8, WINDOW_Windowed, false);
 }
 
 

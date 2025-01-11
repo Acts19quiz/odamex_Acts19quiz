@@ -195,6 +195,9 @@ CVAR_RANGE(			con_buffersize, "1024", "Size of console scroll-back buffer",
 CVAR(				con_coloredmessages, "1", "Activates colored messages in printed messages",
 					CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)
 
+CVAR_RANGE_FUNC_DECL(con_scaletext, "0", "Scale factor of console text (0 = auto).",
+					CVARTYPE_INT, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE, 0.0f, 4.0f)
+
 CVAR(message_showpickups, "1", "Show item pickup messages on the message line.",
      CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)
 
@@ -260,7 +263,7 @@ CVAR(				cl_disconnectalert, "1", "Plays a sound when a player quits",
 					CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)
 
 CVAR_RANGE			(cl_chatsounds, "1", "Plays a sound when a chat message appears (0 = never, 1 = always, " \
-					"2 = only teamchat)", 
+					"2 = only teamchat)",
 					CVARTYPE_BYTE, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE, 0.0f, 2.0f)
 
 CVAR_RANGE(			cl_switchweapon, "1", "Switch upon weapon pickup (0 = never, 1 = always, " \
@@ -340,7 +343,7 @@ CVAR_RANGE (sv_teamsinplay, "2", "Teams that are enabled", CVARTYPE_BYTE, CVAR_S
 // --------------
 
 CVAR(cl_downloadsites,
-     "https://static.allfearthesentinel.net/wads/ https://doomshack.org/wads/ "
+     "https://static.allfearthesentinel.com/wads/ https://doomshack.org/wads/ "
      "http://grandpachuck.org/files/wads/ https://wads.doomleague.org/ "
      "http://files.funcrusher.net/wads/ https://doomshack.org/uploads/ "
      "https://doom.dogsoft.net/getwad.php?search=",
@@ -407,7 +410,7 @@ CVAR(				chasedemo, "0", "",
 CVAR(				cl_run, "1", "Always run",
 					CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)		// Always run? // [Toke - Defaults]
 
-CVAR(in_autosr50, "1", "+strife activates automatic SR50", CVARTYPE_BOOL,
+CVAR(in_autosr50, "1", "+strafe activates automatic SR50", CVARTYPE_BOOL,
      CVAR_CLIENTARCHIVE)
 
 CVAR(				cl_showspawns, "0", "Show spawn points as particle fountains",
@@ -577,6 +580,10 @@ CVAR(hud_feedobits, "1", "Show obituaries in the event feed.", CVARTYPE_BOOL,
 
 CVAR(hud_hordeinfo_debug, "0", "Show debugging information for horde.", CVARTYPE_BOOL, CVAR_NULL)
 
+CVAR_RANGE(hud_extendedinfo, "0",
+		   "Show kills, items, and secrets:\n// 0: Off\n// 1: DIGFONT\n// 2: SMALLFONT\n// 3: DIGFONT, vertical arrangement\n// 4: SMALLFONT, vertical arrangement",
+		   CVARTYPE_INT, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE, 0.0, 4.0)
+
 #ifdef _XBOX
 CVAR (chatmacro0, "Hi.", "",	CVARTYPE_STRING, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE)                       // A
 CVAR (chatmacro1, "I'm ready to kick butt!", "",	CVARTYPE_STRING, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE)   // B
@@ -653,7 +660,7 @@ static char *C_GetDefaultMusicSystem()
 	if (int(defaultmusicsystem) > 999 || int(defaultmusicsystem) < 0)
 		defaultmusicsystem = MS_NONE;
 
-	sprintf(str, "%i", defaultmusicsystem);
+	snprintf(str, 4, "%i", defaultmusicsystem);
 	return str;
 }
 
@@ -736,8 +743,8 @@ CVAR_RANGE(		r_wipetype, "1", "",
 				CVARTYPE_BYTE, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE, 0.0f, 3.0f)
 #endif
 
-CVAR(			r_showendoom, "0", "Display the ENDDOOM text after quitting",
-				CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)   // [ML] 1/5/10: Add endoom support
+CVAR_RANGE(		r_showendoom, "0", "Display the ENDDOOM text after quitting",
+				CVARTYPE_BYTE, CVAR_CLIENTARCHIVE | CVAR_NOENABLEDISABLE, 0.0f, 2.0f)   // [ML] 1/5/10: Add endoom support
 
 CVAR(			r_loadicon, "1", "Display the disk icon when loading data from disk",
 				CVARTYPE_BOOL, CVAR_CLIENTARCHIVE)
