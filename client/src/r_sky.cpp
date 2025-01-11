@@ -69,7 +69,7 @@ CVAR_FUNC_IMPL(r_stretchsky)
 	R_InitSkyMap ();
 }
 
-char SKYFLATNAME[8] = "F_SKY1";
+OLumpName SKYFLATNAME = "F_SKY1";
 
 
 static tallpost_t* skyposts[MAXWIDTH];
@@ -255,7 +255,7 @@ void R_RenderSkyRange(visplane_t* pl)
 	else
 	{
 		// MBF's linedef-controlled skies
-		short picnum = (pl->picnum & ~PL_SKYFLAT) - 1;
+		int picnum = (pl->picnum & ~PL_SKYFLAT) - 1;
 		const line_t* line = &lines[picnum < numlines ? picnum : 0];
 
 		// Sky transferred from first sidedef

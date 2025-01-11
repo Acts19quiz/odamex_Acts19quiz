@@ -71,6 +71,7 @@
 
 EXTERN_CVAR(sv_allowexit)
 EXTERN_CVAR(sv_fragexitswitch)
+EXTERN_CVAR(co_boomphys)
 
 std::list<movingsector_t> movingsectors;
 std::list<sector_t*> specialdoors;
@@ -142,7 +143,7 @@ int P_FindLineFromTag(int tag, int start)
 	return start;
 }
 
-const unsigned int P_ResetSectorTransferFlags(const unsigned int flags)
+unsigned int P_ResetSectorTransferFlags(const unsigned int flags)
 {
 	return (flags & ~SECF_TRANSFERMASK);
 }
@@ -774,6 +775,8 @@ bool P_CheckTag(line_t* line)
 
 	case 48: // Scrolling walls
 	case 85:
+	case 2082:
+	case 2083:
 		return true; // zero tag allowed
 
 	default:
@@ -892,8 +895,6 @@ void P_InitPicAnims (void)
 						(anim_p[20] << 8) |
 						(anim_p[21] << 16) |
 						(anim_p[22] << 24);
-
-			lastanim->countdown--;
 
 			lastanim++;
 		}
@@ -1255,17 +1256,18 @@ fixed_t P_FindShortestTextureAround (sector_t *sec)
 	int minsize = MAXINT;
 	side_t *side;
 	int i;
+	int mintex = co_boomphys ? 1 : 0;
 
 	for (i = 0; i < sec->linecount; i++)
 	{
 		if (sec->lines[i]->flags & ML_TWOSIDED)
 		{
 			side = &sides[(sec->lines[i])->sidenum[0]];
-			if (side->bottomtexture >= 0 && textureheight[side->bottomtexture] < minsize)
+			if (side->bottomtexture >= mintex && textureheight[side->bottomtexture] < minsize)
 				minsize = textureheight[side->bottomtexture];
 
 			side = &sides[(sec->lines[i])->sidenum[1]];
-			if (side->bottomtexture >= 0 && textureheight[side->bottomtexture] < minsize)
+			if (side->bottomtexture >= mintex && textureheight[side->bottomtexture] < minsize)
 				minsize = textureheight[side->bottomtexture];
 		}
 	}
@@ -1289,17 +1291,18 @@ fixed_t P_FindShortestUpperAround (sector_t *sec)
 	int minsize = MAXINT;
 	side_t *side;
 	int i;
+	int mintex = co_boomphys ? 1 : 0;
 
 	for (i = 0; i < sec->linecount; i++)
 	{
 		if (sec->lines[i]->flags & ML_TWOSIDED)
 		{
 			side = &sides[(sec->lines[i])->sidenum[0]];
-			if (side->toptexture >= 0 && textureheight[side->toptexture] < minsize)
+			if (side->toptexture >= mintex && textureheight[side->toptexture] < minsize)
 				minsize = textureheight[side->toptexture];
 
 			side = &sides[(sec->lines[i])->sidenum[1]];
-			if (side->toptexture >= 0 && textureheight[side->toptexture] < minsize)
+			if (side->toptexture >= mintex && textureheight[side->toptexture] < minsize)
 				minsize = textureheight[side->toptexture];
 		}
 	}
