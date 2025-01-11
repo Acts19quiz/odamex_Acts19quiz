@@ -1161,7 +1161,7 @@ BEGIN_COMMAND(hordecooldownclear)
 
 	if (network_game && clientside)
 	{
-		Printf(serveronlycmd);
+		Printf("%s", serveronlycmd);
 		return;
 	}
 
@@ -1183,7 +1183,7 @@ BEGIN_COMMAND(hordecooldownprint)
 
 	if (network_game && clientside)
 	{
-		Printf(serveronlycmd);
+		Printf("%s", serveronlycmd);
 		return;
 	}
 
