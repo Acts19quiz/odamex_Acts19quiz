@@ -161,7 +161,7 @@ EXTERN_CVAR(screenblocks)
 #define M_ZOOMOUT ((int)(FRACUNIT64 / 1.02))
 
 // translates between frame-buffer and map distances
-#define FTOM(x) FixedMul64(((x) << FRACBITS64), scale_ftom)
+#define FTOM(x) FixedMul64((INT2FIXED64((x))), scale_ftom)
 #define MTOF(x) FIXED642INT(FixedMul64((x), scale_mtof))
 
 #define PUTDOTP(xx, yy, cc) fb[(yy)*f_p + (xx)] = (cc)
@@ -364,7 +364,7 @@ void AM_restoreScaleAndLoc()
 	M_AddVec2Fixed64(&m_ur, &m_ll, &m_wh);
 
 	// Change the scaling multipliers
-	scale_mtof = FixedDiv64(f_w << FRACBITS64, m_wh.x);
+	scale_mtof = FixedDiv64(INT2FIXED64(f_w), m_wh.x);
 	scale_ftom = FixedDiv64(FRACUNIT64, scale_mtof);
 }
 
