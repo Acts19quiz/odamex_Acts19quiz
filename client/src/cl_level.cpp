@@ -119,6 +119,15 @@ void G_DeferedReset() {
 
 BEGIN_COMMAND (wad) // denis - changes wads
 {
+	std::string lastmap = argv[argc-1];
+	if (lastmap.rfind("lastmap=", 0) == 0)
+	{
+		lastmap = lastmap.substr(8);
+		argc--;
+	}
+	else
+		lastmap = "";
+
 	// [Russell] print out some useful info
 	if (argc == 1)
 	{
@@ -140,7 +149,7 @@ BEGIN_COMMAND (wad) // denis - changes wads
 	C_HideConsole();
 
 	std::string wadstr = C_EscapeWadList(VectorArgs(argc, argv));
-	G_LoadWadString(wadstr);
+	G_LoadWadString(wadstr, lastmap);
 
 	D_StartTitle ();
 	CL_QuitNetGame(NQ_SILENT);
