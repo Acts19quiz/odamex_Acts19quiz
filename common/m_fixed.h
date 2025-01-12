@@ -105,7 +105,7 @@ inline int FIXED642INT(fixed64_t x)
 	return ((int32_t)FRAC64FILL(x >> FRACBITS64, x));
 }
 
-inline fixed_t INT2FIXED64(int x)
+inline fixed64_t INT2FIXED64(int64_t x)
 {
 	return x << FRACBITS64;
 }
